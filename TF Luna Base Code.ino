@@ -1,4 +1,4 @@
-///https://www.diyengineers.com/2022/06/02/lidar-how-to-use-with-arduino/
+///From -> https://www.diyengineers.com/2022/06/02/lidar-how-to-use-with-arduino/
 #include <Arduino.h>
 #include <Wire.h>        // Instantiate the Wire library
 #include <TFLI2C.h>      // TFLuna-I2C Library v.0.1.1
