@@ -1,0 +1,40 @@
+import socket
+from Led import *
+
+ip = "10.1.1.1"
+port = 60641
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+sock.bind((ip, port))
+
+print(f'Start listening to {ip}:{port}')
+
+
+led=Led()
+
+while True:
+	data, addr = sock.recvfrom(1024)
+	print(f"received message: {data}")
+	#================== checking message request =====================
+	print(str(data))
+	if(str(data) == "b'Led'"):
+		print("message is Led request")
+		try:
+			#Red wipe
+			print ("\wipe")
+			led.colorWipe(led.strip, Color(0, 0, 0))   #turn off the light
+			time.sleep(1)
+		except KeyboardInterrupt:
+			led.colorWipe(led.strip, Color(0, 0, 0))   #turn off the light
+			print ("\nEnd of program")
+        
+		
+		
+
+	#================== sending response back =====================
+	
+	#delay maybe 1-2 seconds 	
+	
+	#David's port
+	#sock.sendto(b"ok", ("192.168.1.2", 60641))
