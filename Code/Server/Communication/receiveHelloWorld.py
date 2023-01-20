@@ -17,8 +17,13 @@ while True:
 	#================== checking message request =====================
 	print(str(data))
 	
-		
-		
+	data = data.decode(encoding='utf-8')
+	coordList = (str(data)).split(',')
+	                            	  
+	#this is to check if coordinate is decimal or integer                            	                                      
+	if(coordList[0].replace('.','',1).isdigit() and coordList[1].replace('.','',1).isdigit()):
+		print("Coordlist[0]: ", coordList[0])
+		print("Coordlist[1]: ", coordList[1])
 
 	#================== sending response back =====================
 	

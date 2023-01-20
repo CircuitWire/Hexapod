@@ -25,9 +25,16 @@ c=Control()
 #servo.setServoAngle(0, -100)
 #c.relax(True)
 
+#============================ Stop  =====================================
+
+def stop():
+  for i in range(3):
+    data=['CMD_MOVE', '3', '0', '0', '10', '0']  
+    c.run(data)
+
 #========================== Movement  =====================================
 
-def movement():
+def movement_without_param():
     gait = input("\nEnter Gait Mode ('1' is three legs, '2' is one leg, '3' is in development: ")
     x = input("Enter x-value: ")
     y = input("Enter y-value: ")
@@ -38,13 +45,28 @@ def movement():
         c.run(data)    
     c.relax(True)
 
+#========================== Movement with Parameters  ======================
+
+def move(gait, x, y, delay, angle):
+
+    for i in range(1):
+        data=['CMD_MOVE', gait, x, y, delay, angle] 
+        c.run(data)    
+    c.relax(True)
 
 #========================== Forward  =====================================
+#data=['CMD_MOVE', '2', '0', '12', '5', '0']  
+#      stable gait: 2, (x,y):(0,12) perfect inch, 5 slow speed
+
 
 def forward():
-  for i in range(3):
-    data=['CMD_MOVE', '3', '0', '10', '3', '0']  #testing out gait mode "3"
-    c.run(data)
+    for i in range(3):
+        #               gait,  x,    y,  speed, angle
+        data=['CMD_MOVE', '4', '0', '12', '8', '0']  #testing out gait mode "3"
+        c.run(data)
+        #time.sleep(2.5)     #29, 13
+    c.relax(True)
+
 
 #def forward(rangeVal, gait, x, y, delay, actionMode):
   #for i in range(rangeVal):
@@ -55,7 +77,7 @@ def forward():
 
 def left():
   for i in range(3):
-    data=['CMD_MOVE', '2', '-15', '0', '10', '0']  
+    data=['CMD_MOVE', '3', '-15', '0', '10', '0']  
     c.run(data)
     c.relax(True)
     
@@ -63,15 +85,15 @@ def left():
 
 def right():
   for i in range(3):
-    data=['CMD_MOVE', '2', '15', '0', '10', '0']  
+    data=['CMD_MOVE', '3', '15', '0', '10', '0']  
     c.run(data)
     c.relax(True)
     
 #========================== Backward  ====================================
 
 def back():
-  for i in range(3):
-    data=['CMD_MOVE', '2', '0', '-15', '10', '0']  
+  for i in range(2):
+    data=['CMD_MOVE', '1', '0', '-12', '10', '0']  
     c.run(data)
     c.relax(True)
     
@@ -137,6 +159,7 @@ def test_imu():
 #==================== Push Up(use -12, 12) ==============================
 import time
 def pushup():
+               #x,y,z
 	c.posittion(0,0,5)      #push up
 	c.posittion(0,0,26)      #push up
 	time.sleep(0.5)
@@ -196,26 +219,13 @@ def noParamRotateCW():
 def rotateCW(rotation):
     rotation = int(rotation)
     #when rotation = 1, rotate 1/4 of a circle cw
-    if(rotation == 90):
-        for i in range(3):
-          data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 90 degs clockwise
-          c.run(data)  
-    #when rotation = 2, rotate 1/2 of a circle cw
-    elif(rotation == 180):
-        for i in range(6):
-          data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 180 degs clockwise
-          c.run(data) 
-    #when rotation = 1, rotate 3/4 of a circle cw
-    elif(rotation == 270):
-        for i in range(9):
-          data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 270 degs clockwise
-          c.run(data) 
-    #when rotation = 1, rotate full circle cw
-    elif(rotation == 360):
-        for i in range(12):
-          data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 360 degs clockwise
-          c.run(data)
-    c.relax(True)
+    print("nnum/30", int(rotation/30))
+    for i in range(int(rotation/30)):
+      data=['CMD_MOVE', '1', '0', '0', '7', '10']  # rotate 90 degs clockwise
+      c.run(data) 
+    #if 40
+       
+    #c.relax(True)
 
 #======================= noParam Rotate CCW Method ===========================
   
@@ -249,27 +259,11 @@ def noParamRotateCCW():
 
 def rotateCCW(rotation):
     rotation = int(rotation)
-    #when rotation = 1, rotate 1/4 of a circle cw
-    if(rotation == 90):
-        for i in range(3):
-          data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 90 degs counter clockwise
-          c.run(data)   
-    #when rotation = 2, rotate 1/2 of a circle cw
-    elif(rotation == 180):
-        for i in range(6):
-          data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 180 degs counter clockwise
-          c.run(data)  
-    #when rotation = 1, rotate 3/4 of a circle cw
-    elif(rotation == 270):
-        for i in range(9):
-          data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 270 degs counter clockwise
-          c.run(data) 
-    #when rotation = 1, rotate full circle cw
-    elif(rotation == 360):
-        for i in range(12):
-          data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 360 degs counter clockwise
+    
+    for i in range(int(rotation/30)):
+          data=['CMD_MOVE', '1', '0', '0', '7', '-10'] 
           c.run(data)
-    c.relax(True)
+    #c.relax(True)
 
 #======================= Circle CW Method ===============================
 
@@ -330,10 +324,27 @@ def circleCCW(rotation):
 def relax():
   c.relax(True)
 
-
+#========================= Attitude/Climbing Method ===============================
+def attitude():
+    #climbing
+    #           attitude      x   y  z
+    #c.order =['CMD_ATTITUDE','10','5','0','','']
+    c.set_order(10,0,0)
+    c.check_condition()
+    print('ran condition')
+    time.sleep(3)
+    
+    forward()
+    time.sleep(3)
+    c.relax(True)
+    
 #=================== test individual methods ==========================
 #data=['CMD_MOVE', '1', '0', '25', '10', '0']
 #exit()
+
+#data=['CMD_ATTITUDE', '10', '3', '0']
+#c.run(data)
+#c.relax(True)
 
 #======================== Inputs for terminal =========================
 if __name__ == '__main__':
@@ -342,8 +353,13 @@ if __name__ == '__main__':
     if len(sys.argv)<2:
         print ("Parameter error: Please assign the device")
         exit()
-    if sys.argv[1] == 'Move' or sys.argv[1] == 'move':
-        movement()
+    if sys.argv[1] == 'Movement' or sys.argv[1] == 'movement':
+        movement_without_param()
+    elif sys.argv[1] == 'Move' or sys.argv[1] == 'move':
+        #need to put sys args
+        move(gait, x, y, delay, angle)
+    elif sys.argv[1] == 'Att' or sys.argv[1] == 'att':
+        attitude()
     elif sys.argv[1] == 'Foward' or sys.argv[1] == 'forward':
         forward()
     elif sys.argv[1] == 'Left' or sys.argv[1] == 'left':

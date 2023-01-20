@@ -25,11 +25,11 @@ class Servo:
             date = mapNum(mapNum(angle,0,180,500,2500),0,20000,0,4095) # 
             self.pwm_40.setPWM(channel, 0, int(date))
         #time.sleep(0.0001)
-    def relax(self):
+    def relax(self):        
         for i in range(8):
             self.pwm_41.setPWM(i+8, 4096, 4096)
             self.pwm_40.setPWM(i, 4096, 4096)
-            self.pwm_40.setPWM(i+8, 4096, 4096)
+            self.pwm_40.setPWM(i+8, 4096, 4096)            
             
 def servo_installation_position():
     S=Servo()     

@@ -3,7 +3,7 @@ import socket
 #ip = "192.168.1.2"
 ip = "10.1.1.1"
 port = 60641
-msg = b"hello"
+msg = b"2,5"
 
 print(f'Sending {msg} to {ip}:{port}')
 
