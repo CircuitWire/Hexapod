@@ -1,0 +1,11 @@
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+
+#python3.7
+#python3.9
+
+https://itheo.tech/install-python-39-on-raspberry-pi
+
+
+=============================================================
+sudo cp -r /home/pi/.local/lib/python3.9/site-packages/* /usr/local/lib/python3.9/site-packages/
+===============================================================

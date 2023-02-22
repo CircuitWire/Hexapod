@@ -1,7 +1,6 @@
 import time
 import os
 from Led import *
-from Control import *
 
 print(os.getcwd())
 led=Led()
@@ -58,7 +57,7 @@ def test_rgb_Led():
         led.colorWipe(led.strip, Color(0, 0, 0))   #turn off the light
         print ("\nEnd of program")
 
-def david_san_test_forward():
+def david_test_forward():
     # Looking at the Canvas Hexapod documentation to see ID's of the legs
     # would prob be wrong; but just coding something out to start
     ARM_MOVEMENT = 10
@@ -123,26 +122,33 @@ def test_Ultrasonic():
 
 from Servo import *
 servo=Servo()
-#for i in range(90):
-     #  servo.setServoAngle(,i) 
-     #  time.sleep(0.005)
 def test_Servo():
     try:
-        #for inner motor the higher the angle it goes back, 
-        #the lowerthe angle is towards the head
-
-        #for middle motor 14, the lower the angle 10 points leg down
-        #for middle motor 14, the higher the angle 90 points leg up
-
-        #for outermost motor 13, the higher the angle 90 points leg inward/down
-        #for outermost motor 13, the lower the angle 10 points leg outward/up
-        for i in range(20):
-            servo.setServoAngle(13,10+i)
-            servo.setServoAngle(13,10+i)        
         
-        c=Control()
-        time.sleep(2)
-        c.relax(True)
+        for i in range(50):
+            servo.setServoAngle(15,90+i)
+            servo.setServoAngle(12,90+i)
+            servo.setServoAngle(9,90+i)
+            servo.setServoAngle(16,90+i)
+            servo.setServoAngle(19,90+i)
+            servo.setServoAngle(22,90+i)
+            time.sleep(0.005)
+        for i in range(60):
+            servo.setServoAngle(14,90+i)
+            servo.setServoAngle(11,90+i)
+            servo.setServoAngle(8,90+i)
+            servo.setServoAngle(17,90-i)
+            servo.setServoAngle(20,90-i)
+            servo.setServoAngle(23,90-i)
+            time.sleep(0.005)
+        for i in range(120):
+            servo.setServoAngle(13,i)
+            servo.setServoAngle(10,i)
+            servo.setServoAngle(31,i)
+            servo.setServoAngle(18,180-i)
+            servo.setServoAngle(21,180-i)
+            servo.setServoAngle(27,180-i)
+            time.sleep(0.005)
     except KeyboardInterrupt:
         print ("\nEnd of program")
         
@@ -216,10 +222,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'Buzzer':   
         test_Buzzer()
     elif sys.argv[1] == 'DTS':
-        david_san_test_forward()
-    elif sys.argv[1] == 'LookStraight':
-        servo.setServoAngle(0,90)
-
+        david_test_forward()
         
         
         

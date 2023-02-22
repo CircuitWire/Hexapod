@@ -5,35 +5,45 @@ import myCode
 c=Control() 		#Creating object 'control' of 'Control' class.
 ultrasonic=Ultrasonic() #Creating object 'ultrasonic' of 'Ultrasonic' class.               
 
-try:
+
+ry:
     while True:
         data = ultrasonic.getDistance()
         print(str(data))
 	
         if(data <= 20):
           
-          #how to make it stop
-          myCode.stop()
-          print("sleep for a bit")
-          time.sleep(3)	
           
-          myCode.rotateCW(30)
+          time.sleep(1)	          
+          
+          #back        inches, gait, x, y, delay, angle
+          myCode.move(3, 2, 0, -12, 11, 0)
+
+          time.sleep(1)	
+          #right
+          myCode.attitude(0,0,-15)
           time.sleep(3)	
           distanceRight=ultrasonic.getDistance()
           print("dist right: ", str(distanceRight))
-          myCode.rotateCCW(60)
+          
+          
+          #left
+          myCode.attitude(0,0,15)
           time.sleep(3)	
           distanceLeft=ultrasonic.getDistance()
           print("dist left: ", str(distanceLeft))
-          myCode.rotateCW(30)
+                    
           
-          myCode.back()
+          
           if(distanceRight >= distanceLeft):
-            myCode.rotateCW(30)
+            #crab walk right
+            myCode.move(3, 2, 12, 0, 11, 0)
           else:
-            myCode.rotateCCW(30)
-	
-        myCode.forward()
+            #crab walk left
+            myCode.move(3, 2, -12, 0, 11, 0)
+      
+        # forward        
+        myCode.move(3, 2, 0, 12, 11, 0)
 except KeyboardInterrupt:
         myCode.relax()
         print("\nEnd of program")

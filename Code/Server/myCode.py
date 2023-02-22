@@ -1,41 +1,49 @@
-#this myCode.py is only for TERMINAL INPUTS
 
-#make sure to use relax at the end or else servos get stiff
-#Import everything in the control module, 
-#including functions, classes, variables, and more.
+#to save battery, relax hex after moving
+
 from Control import *
+from Servo import *
+from IMU import *
+import time
+import math
+from Ultrasonic import *
+import serial
+import RPi.GPIO as GPIO
 
-#Creating object 'control' of 'Control' class.
 c=Control()
+servo=Servo()
 
-#example:
-        # 0     ,   1,   2,   3,    4,    5
+#data array:
 #data=['CMD_MOVE', '1', '0', '25', '10', '0']
-#Move command:'CMD_MOVE'
-#Gait Mode: "1"        Note: "2" is one by one, "1" is three by three # 3rd gait 
-#Moving direction: x='0',y='25'
-#Delay:'10'
-#Action Mode : '0'   Angleless turn 
+   #Move command:'CMD_MOVE'
+   #Gait Mode: "1"       
+     #Note: "2" is one leg at a time, "1" is three legs
+   #Moving direction: x='0',y='25'
+   #Delay:'10'
+   #Action Mode : '0'   Angleless turn 
 
-#=========== Moving Head (Head Servo Heating up, Not Consistent) ======
-#this method did not work as intended for some reason
-#from Servo import *
-#servo = Servo()
-#servo.setServoAngle(1, -100)
-#servo.setServoAngle(0, -100)
-#c.relax(True)
+#========================= Fix Head to neutral position =====================
+def fix_head():
+    servo.setServoAngle(0,100)
+    c.relax(True)
 
-#============================ Stop  =====================================
-
-def stop():
-  for i in range(3):
-    data=['CMD_MOVE', '3', '0', '0', '10', '0']  
-    c.run(data)
+#========================== Movement for other Classes  ================
+def move(inches, gait, x, y, delay, angle):
+    
+    gait = str(gait)
+    x = str(x)
+    y = str(y)    
+    delay = str(delay)
+    angle = str(angle)
+    
+    for i in range(inches):
+        data=['CMD_MOVE', gait, x, y, delay, angle] 
+        c.run(data)    
+    #c.relax(True)
 
 #========================== Movement  =====================================
-
 def movement_without_param():
-    gait = input("\nEnter Gait Mode ('1' is three legs, '2' is one leg, '3' is in development: ")
+    gait = input("\nEnter Gait Mode ('1' is three legs, '2' is one leg, anything 3+ is Redundancy/Incline")
     x = input("Enter x-value: ")
     y = input("Enter y-value: ")
     delay = input("Enter delay-value (Ex: '1' is slow, '10' is fast): ")
@@ -43,51 +51,35 @@ def movement_without_param():
     for i in range(3):
         data=['CMD_MOVE', gait, x, y, delay, angle] 
         c.run(data)    
-    c.relax(True)
-
-#========================== Movement with Parameters  ======================
-
-def move(gait, x, y, delay, angle):
-
-    for i in range(1):
-        data=['CMD_MOVE', gait, x, y, delay, angle] 
-        c.run(data)    
-    c.relax(True)
+    #c.relax(True)
 
 #========================== Forward  =====================================
-#data=['CMD_MOVE', '2', '0', '12', '5', '0']  
-#      stable gait: 2, (x,y):(0,12) perfect inch, 5 slow speed
+#data=['CMD_MOVE', '2', '0', '12', '5', '0']
+#                   |    |     |
+#                   |    |     |
+#      stable gait: 2,   x,    y = (0,12) perfect inch
 
-
-def forward():
-    for i in range(3):
-        #               gait,  x,    y,  speed, angle
-        data=['CMD_MOVE', '4', '0', '12', '8', '0']  #testing out gait mode "3"
+def forward(x):
+    for i in range(x):
+        data=['CMD_MOVE', '2', '0', '12', '11', '0']
         c.run(data)
-        #time.sleep(2.5)     #29, 13
-    c.relax(True)
-
-
-#def forward(rangeVal, gait, x, y, delay, actionMode):
-  #for i in range(rangeVal):
-    #data=['CMD_MOVE', gait, x, y, delay, '0']  #"1" move three by 3 fwd
-    #c.run(data)
+    #c.relax(True)
 
 #============================ Left  =====================================
 
-def left():
-  for i in range(3):
-    data=['CMD_MOVE', '3', '-15', '0', '10', '0']  
+def left(x):
+  for i in range(x):
+    data=['CMD_MOVE', '1', '-12', '0', '10', '0']  
     c.run(data)
-    c.relax(True)
+    #c.relax(True)
     
 #========================== Right  =====================================
 
-def right():
-  for i in range(3):
-    data=['CMD_MOVE', '3', '15', '0', '10', '0']  
+def right(x):
+  for i in range(x):
+    data=['CMD_MOVE', '2', '12', '0', '12', '0']  
     c.run(data)
-    c.relax(True)
+    #c.relax(True)
     
 #========================== Backward  ====================================
 
@@ -95,14 +87,9 @@ def back():
   for i in range(2):
     data=['CMD_MOVE', '1', '0', '-12', '10', '0']  
     c.run(data)
-    c.relax(True)
+    #c.relax(True)
     
-#========================= Servo ======================================
-from Servo import *
-servo=Servo()
-#for i in range(90):
-     #  servo.setServoAngle(,i) 
-     #  time.sleep(0.005)
+#========================= Servo =========================================
 def test_Servo():
     print("   \\              /")
     print("    18    ||    13")
@@ -139,10 +126,10 @@ def test_Servo():
         time.sleep(1)
         c.relax(True)
     except KeyboardInterrupt:
+        c.relax(True)
         print ("\nEnd of program")
         
 #===========================   IMU    =================================
-from IMU import *
 def test_imu():
     s=IMU()
     time1=time.time()
@@ -156,8 +143,21 @@ def test_imu():
             os.system("i2cdetect -y 1")
             break
 
+#================   IMU Gyro and Accelerameter    =======================
+def test_imu_gyro():
+    s=IMU()
+    time1=time.time()
+    while True:
+        try:    
+            time.sleep(0.5)
+            accel_data,gyro_data=s.average_filter()
+            print(gyro_data)
+        except Exception as e:
+            print(e)
+            os.system("i2cdetect -y 1")
+            break
+            
 #==================== Push Up(use -12, 12) ==============================
-import time
 def pushup():
                #x,y,z
 	c.posittion(0,0,5)      #push up
@@ -184,76 +184,19 @@ def figure8():
       data=['CMD_MOVE', '1', '0', '25', '10', '10'] 
       c.run(data)
       c.relax(True)
-
-#======================= noParam Rotate CW Method ===============================
-      
-def noParamRotateCW():
-  #if user does not parse desired rotation as a parameter it will prompt them in the method
-  rotation = int(input("Enter 90, 180, 270, or 360 for rotation CW: "))
-  
-  #when rotation = 1, rotate 1/4 of a circle cw
-  if(rotation == 90):
-    for i in range(3):
-      data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 90 degs clockwise
-      c.run(data)  
-  #when rotation = 2, rotate 1/2 of a circle cw
-  elif(rotation == 180):
-    for i in range(6):
-      data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 180 degs clockwise
-      c.run(data) 
-  #when rotation = 1, rotate 3/4 of a circle cw
-  elif(rotation == 270):
-    for i in range(9):
-      data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 270 degs clockwise
-      c.run(data) 
-  #when rotation = 1, rotate full circle cw
-  elif(rotation == 360):
-    for i in range(12):
-      data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 360 degs clockwise
-      c.run(data)
-  c.relax(True)
-  
   
 #======================= rotate CW Method with sys.argv[2] =========================
       
 def rotateCW(rotation):
     rotation = int(rotation)
-    #when rotation = 1, rotate 1/4 of a circle cw
-    print("nnum/30", int(rotation/30))
+    #when rotation divided by 30 = 1, rotate 1/4 of a circle cw
+    print("num/30", int(rotation/30))
     for i in range(int(rotation/30)):
-      data=['CMD_MOVE', '1', '0', '0', '7', '10']  # rotate 90 degs clockwise
+      data=['CMD_MOVE', '1', '0', '0', '10', '10']  # rotate 90 degs clockwise
       c.run(data) 
     #if 40
        
     #c.relax(True)
-
-#======================= noParam Rotate CCW Method ===========================
-  
-def noParamRotateCCW():
-  #if user does not parse desired rotation as a parameter it will prompt them in the method
-  rotation = int(input("Enter 90, 180, 270, or 360 for rotation CCW: "))
-  
-  #when rotation = 1, rotate 1/4 of a circle cw
-  if(rotation == 90):
-    for i in range(3):
-      data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 90 degs counter clockwise
-      c.run(data)   
-  #when rotation = 2, rotate 1/2 of a circle cw
-  elif(rotation == 180):
-    for i in range(6):
-      data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 180 degs counter clockwise
-      c.run(data)  
-  #when rotation = 1, rotate 3/4 of a circle cw
-  elif(rotation == 270):
-    for i in range(9):
-      data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 270 degs counter clockwise
-      c.run(data) 
-  #when rotation = 1, rotate full circle cw
-  elif(rotation == 360):
-    for i in range(12):
-      data=['CMD_MOVE', '1', '0', '0', '10', '-10']  # rotate 360 degs counter clockwise
-      c.run(data)
-  c.relax(True)
 
 #======================= rotate CCW Method with sys.argv[2] ===============
 
@@ -325,27 +268,279 @@ def relax():
   c.relax(True)
 
 #========================= Attitude/Climbing Method ===============================
-def attitude():
+def attitude(x,y,z):
     #climbing
-    #           attitude      x   y  z
+                #attitude      x   y  z
     #c.order =['CMD_ATTITUDE','10','5','0','','']
-    c.set_order(10,0,0)
+    c.set_order(x,y,z)
     c.check_condition()
-    print('ran condition')
-    time.sleep(3)
+    #time.sleep(3)
     
-    forward()
+    #forward()
+    #time.sleep(3)
+    #c.relax(True)
+
+#========================= look right ===============================    
+def lookright():
+    attitude(0,0,15)
     time.sleep(3)
+    attitude(0,0,0)
     c.relax(True)
     
-#=================== test individual methods ==========================
-#data=['CMD_MOVE', '1', '0', '25', '10', '0']
-#exit()
+#========================= look left ===============================
+def lookleft():
+    attitude(0,0,-15)
+    time.sleep(3)
+    attitude(0,0,0)
+    c.relax(True)
+    
+    
+    
+#========================= LiDar Readings ==============================
 
-#data=['CMD_ATTITUDE', '10', '3', '0']
-#c.run(data)
-#c.relax(True)
+def listenArduinoLiDar():
+    ser=serial.Serial("/dev/ttyACM0",115200)  #change ACM number as found from ls /dev/tty/ACM*
+    ser.baudrate=115200
 
+    #GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(11, GPIO.OUT)
+    distance_Inches = 0.0
+    for i in range(3):
+        print('printing for loop')
+        read_ser=ser.readline()
+        print(read_ser)
+        distance = str(read_ser).split("'")
+        print((distance[1]).split("\x5c")[0])
+        try:
+            distance_Inches += float(str((distance[1]).split("\x5c")[0]))
+        except:
+            print("invalid reading")
+            
+    return distance_Inches/3
+
+    
+#========================= Receive Coor ===============================
+
+def recieveCoordinates(x, y):
+  	#setup
+    ultrasonic=Ultrasonic()
+    xCoorDis = x
+    yCoorDis = y
+    degreeRad = math.atan(y/x)
+    try:
+      	#go towards sent coordinates until within 2 inches from coordinate
+        while xCoorDis >= 2 and yCoorDis >= 2:
+            data=listenArduinoLiDar()   #Get the value
+            print ("Obstacle distance is "+str(data)+"CM")
+            #constantly get ultrasonic values to see if object is in front
+            #if object detected is within 16 cm, trigger object detected func
+            if(data <= 20):
+                objectDetected(degreeRad, xCoorDis, yCoorDis)
+            #if not, keep going forward and decrement your coordinate distance
+            #as you go forward
+            else:
+                forward(1)
+                xCoorDis = xCoorDis - (math.cos(degreeRad))
+                yCoorDis = yCoorDis - (math.sin(degreeRad))
+    except KeyboardInterrupt:
+        c.relax(True)
+        print("\nEnd of program")
+    c.relax(True)
+      
+def objectDetected(degreeRad, xCoorDis, yCoorDis):
+    ultrasonic=Ultrasonic()
+    #leftDisReading will be a collection of readings to the left
+    #of our hex and vice versa for rightDisReading
+    leftDisReading=0
+    rightDisReading=0
+    try:
+      	#we do range -3 to -16 because that turns our hexapod towards the left
+        #the lower the num, the more we shift left
+        for i in range(-3, -16, -2):
+            attitude(0,0,i)
+            time.sleep(0.1)
+            #increment leftDisReading reading by the range of detected value
+            leftDisReading+=listenArduinoLiDar()
+        print("dist left: ", str(leftDisReading))
+        #we do range 3 to 16 because that turns our hexapod towards the right
+        #the lower the num, the more we shift right
+        for i in range(3, 16, 2):
+          attitude(0,0,i)
+          time.sleep(0.1)
+          #increment rightDisReading reading by the range of detected value
+          rightDisReading+=listenArduinoLiDar()
+        print("dist right: ", str(rightDisReading))
+        objectInFront = True
+        goingAroundObject = True
+        #compare collection of left values to collection
+        #of right values. Whichever number is higher means
+        #there is more space for the hex to go through
+        if(rightDisReading >= leftDisReading):
+          	#we want to keep track of the number of times we go right
+            #in order to adjust back to our neutral orginial path
+            clicksRight=0
+            while(objectInFront):
+                clicksRight+=1
+                right(4)
+                objectInFront=listenArduinoLiDar()
+                time.sleep(0.2)
+                attitude(0,0,-15)
+                objectInFrontLookingLeft=listenArduinoLiDar()
+                time.sleep(0.2)
+                if(objectInFront >= 20 and objectInFrontLookingLeft >= 50):
+                    objectInFront = False
+            #this while loop will run once we establish that the hexapod has
+            #enough room to go forward
+            while(goingAroundObject):
+                forward(5)
+                xCoorDis = xCoorDis - 5*(math.cos(degreeRad))
+                yCoorDis = yCoorDis - 5*(math.sin(degreeRad))
+                time.sleep(0.2)
+                attitude(0,0,-15)
+                time.sleep(0.2)
+                objectDis=listenArduinoLiDar()
+                time.sleep(0.2)
+                if(objectDis >= 50):
+                    forward(5)
+                    goingAroundObject = False
+            #for loop that adjusts the hex back to neutral position
+            #based clicksRight
+            for i in range(0, clicksRight, 1):
+                left(4)
+        else:
+          	#we want to keep track of the number of times we go left
+            #in order to adjust back to our neutral orginial path
+            clicksLeft=0
+            while(objectInFront):
+                clicksLeft+=1
+                left(6)
+                objectInFront=listenArduinoLiDar()
+                time.sleep(0.2)
+                attitude(0,0,15)
+                objectInFrontLookingRight=listenArduinoLiDar()
+                time.sleep(0.2)
+                if(objectInFront >= 20 and objectInFrontLookingRight >= 50):
+                    objectInFront = False
+            #this while loop will run once we establish that the hexapod has
+            #enough room to go forward
+            while(goingAroundObject):
+                rotateCW(10)
+                forward(5)
+                xCoorDis = xCoorDis - 5*(math.cos(degreeRad))
+                yCoorDis = yCoorDis - 5*(math.sin(degreeRad))
+                time.sleep(2)
+                attitude(0,0,15)
+                time.sleep(1)
+                objectDis=listenArduinoLiDar()
+                time.sleep(1)
+                if(objectDis >= 50):
+                    forward(5)
+                    goingAroundObject = False
+            #for loop that adjusts the hex back to neutral position
+            #based clicksLeft
+            for i in range(0, clicksLeft, 1):
+                right(4)
+    except KeyboardInterrupt:
+        c.relax(True)
+        print("\nEnd of program")
+  
+    
+
+   
+  
+    
+
+   
+
+# def recieveCoordinates(x, y):
+    # ultrasonic=Ultrasonic()
+    # xCoorDis = x
+    # yCoorDis = y
+    # degreeRad = math.atan(y/x)
+    # try:
+        # while xCoorDis >= 2 and yCoorDis >= 2:
+            # data=ultrasonic.getDistance()   #Get the value
+            # print ("Obstacle distance is "+str(data)+"CM")
+            # if(data <= 16):
+                # objectDetected(degreeRad, xCoorDis, yCoorDis)
+            # else:
+                # forward(1)
+                # xCoorDis = xCoorDis - (math.cos(degreeRad))
+                # yCoorDis = yCoorDis - (math.sin(degreeRad))
+    # except KeyboardInterrupt:
+        # c.relax(True)
+        # print("\nEnd of program")
+    # #c.relax(True)
+      
+# def objectDetected(degreeRad, xCoorDis, yCoorDis):
+    # ultrasonic=Ultrasonic()
+    # leftDisReading=0
+    # rightDisReading=0
+    # try:
+        # for i in range(-3, -16, -3):
+            # attitude(0,0,i)
+            # time.sleep(0.3)
+            # leftDisReading+=ultrasonic.getDistance()
+        # print("dist left: ", str(leftDisReading))
+        # time.sleep(1.0)
+        # for i in range(3, 16, 3):
+          # attitude(0,0,i)
+          # time.sleep(0.3)
+          # rightDisReading+=ultrasonic.getDistance()
+        # print("dist right: ", str(rightDisReading))
+        # time.sleep(1.0)
+        # objectInFront = True
+        # goingAroundObject = True
+        # if(rightDisReading >= leftDisReading):
+            # clicksRight=0
+            # while(objectInFront is True):
+                # clicksRight+=1
+                # right(4)
+                # time.sleep(1)
+                # objectInFront=ultrasonic.getDistance()
+                # if(objectInFront >= 20):
+                    # objectInFront = False
+            # while(goingAroundObject is True):
+                # forward(5)
+                # xCoorDis = xCoorDis - 5*(math.cos(degreeRad))
+                # yCoorDis = yCoorDis - 5*(math.sin(degreeRad))
+                # time.sleep(1)
+                # attitude(0,0,-5)
+                # time.sleep(1)
+                # objectDis=ultrasonic.getDistance()
+                # time.sleep(1)
+                # if(objectDis >= 30):
+                    # forward(5)
+                    # goingAroundObject = False
+            # for i in range(0, clicksRight, 1):
+                # left(4)
+        # else:
+            # clicksLeft=0
+            # while(objectInFront is True):
+                # clicksLeft+=1
+                # left(4)
+                # time.sleep(2)
+                # objectInFront=ultrasonic.getDistance()
+                # if(objectInFront >= 20):
+                    # objectInFront = False
+            # while(goingAroundObject is True):
+                # forward(5)
+                # xCoorDis = xCoorDis - 5*(math.cos(degreeRad))
+                # yCoorDis = yCoorDis - 5*(math.sin(degreeRad))
+                # time.sleep(2)
+                # attitude(0,0,5)
+                # time.sleep(1)
+                # objectDis=ultrasonic.getDistance()
+                # time.sleep(1)
+                # if(objectDis >= 30):
+                    # forward(5)
+                    # goingAroundObject = False
+            # for i in range(0, clicksLeft, 1):
+                # right(4)
+    # except KeyboardInterrupt:
+        # c.relax(True)
+        # print("\nEnd of program")
+  
 #======================== Inputs for terminal =========================
 if __name__ == '__main__':
     print ('Program is starting ... ')
@@ -353,52 +548,49 @@ if __name__ == '__main__':
     if len(sys.argv)<2:
         print ("Parameter error: Please assign the device")
         exit()
-    if sys.argv[1] == 'Movement' or sys.argv[1] == 'movement':
-        movement_without_param()
+    if sys.argv[1] == 'Head' or sys.argv[1] == 'head':
+        fix_head()
     elif sys.argv[1] == 'Move' or sys.argv[1] == 'move':
-        #need to put sys args
-        move(gait, x, y, delay, angle)
-    elif sys.argv[1] == 'Att' or sys.argv[1] == 'att':
-        attitude()
+        move('3', '1', '0', '12', '10', '0')
+    elif sys.argv[1] == 'Demo' or sys.argv[1] == 'demo':
+        movement_without_param()
     elif sys.argv[1] == 'Foward' or sys.argv[1] == 'forward':
-        forward()
+        forward(65)
+        #This is where the x variable for for loop is
     elif sys.argv[1] == 'Left' or sys.argv[1] == 'left':
-        left()
+        left(3)
     elif sys.argv[1] == 'Right' or sys.argv[1] == 'right':
-        right()
-    elif sys.argv[1] == 'Backward' or sys.argv[1] == 'backward':
+        right(3)
+    elif sys.argv[1] == 'Back' or sys.argv[1] == 'back':
         back()
     elif sys.argv[1] == 'Servo' or sys.argv[1] == 'servo':
         test_Servo()
     elif sys.argv[1] == 'IMU' or sys.argv[1] == 'imu':
         test_imu()
+    elif sys.argv[1] == 'Gyro' or sys.argv[1] == 'gyro':
+        test_imu_gyro()
     elif sys.argv[1] == 'Pushup' or sys.argv[1] == 'pushup':
         pushup()
     elif sys.argv[1] == 'Figure8' or sys.argv[1] == 'figure8':
         figure8()
-    elif sys.argv[1] == 'RotateCW' or sys.argv[1] == 'rotateCW':
-        if len(sys.argv) == 2:
-            print("without")
-            noParamRotateCW()        # sudo python myCode.py rotateCW             
-        elif len(sys.argv) == 3:
-            rotateCW(sys.argv[2])    # sudo python myCode.py rotateCW 90
-        else:
-            print("Try again")
-    elif sys.argv[1] == 'RotateCCW' or sys.argv[1] == 'rotateCCW':   
-        if len(sys.argv) == 2:
-            noParamRotateCCW()      # sudo python myCode.py rotateCCW  
-        elif len(sys.argv) == 3:
-            rotateCCW(sys.argv[2])  # sudo python myCode.py rotateCCW 90
-        else:
-            print("Try again")        
+    elif len(sys.argv) == 3 and (sys.argv[1] == 'RotateCW' or sys.argv[1] == 'rotateCW'):           
+        rotateCW(sys.argv[2])    # sudo python myCode.py rotateCW 90
+    elif len(sys.argv) == 3 and (sys.argv[1] == 'RotateCCW' or sys.argv[1] == 'rotateCCW'):   
+        rotateCCW(sys.argv[2])  # sudo python myCode.py rotateCCW 90
     elif sys.argv[1] == 'CircleCW' or sys.argv[1] == 'circleCW':   
         circleCW()        # sudo python myCode.py CircleCW 
     elif sys.argv[1] == 'CircleCCW' or sys.argv[1] == 'circleCCW':   
         circleCCW()
     elif sys.argv[1] == 'Relax' or sys.argv[1] == 'relax':   
         relax()
-
-
+    elif sys.argv[1] == 'Att' or sys.argv[1] == 'att':
+        attitude(0,0,15)
+    elif sys.argv[1] == 'LookRight' or sys.argv[1] == 'lookright':   
+        lookright()
+    elif sys.argv[1] == 'LookLeft' or sys.argv[1] == 'lookleft':   
+        lookleft()
+    elif sys.argv[1] == 'coor' or sys.argv[1] == 'Coor':
+        recieveCoordinates(10, 10)
 
 
 

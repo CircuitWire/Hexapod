@@ -147,64 +147,128 @@ class Control:
                 self.angle[i+3][2]=self.restriction(180-(self.angle[i+3][2]+self.calibration_angle[i+3][2]),0,180)
              
             #leg1 Gait mode 5
-            if gait=="5":
-                self.servo.setServoAngle(15,90)
-                self.servo.setServoAngle(14,170)
-                self.servo.setServoAngle(13,-90)
+            if gait == "5":
+              self.servo.setServoAngle(15,90)
+              self.servo.setServoAngle(14,170)
+              self.servo.setServoAngle(13,-105)
+            elif gait == "4":
+              self.servo.setServoAngle(15,self.angle[0][0])
+              self.servo.setServoAngle(14,self.angle[0][1]-15)
+              self.servo.setServoAngle(13,self.angle[0][2]-45)
+            elif gait == "10":
+              self.servo.setServoAngle(15,90)
+              self.servo.setServoAngle(14,170)
+              self.servo.setServoAngle(13,-105)
+            elif gait == "13":
+              self.servo.setServoAngle(15,90)
+              self.servo.setServoAngle(14,170)
+              self.servo.setServoAngle(13,-105)
             else:
-                self.servo.setServoAngle(15,self.angle[0][0])
-                self.servo.setServoAngle(14,self.angle[0][1])
-                self.servo.setServoAngle(13,self.angle[0][2])
+              self.servo.setServoAngle(15,self.angle[0][0])
+              self.servo.setServoAngle(14,self.angle[0][1])
+              self.servo.setServoAngle(13,self.angle[0][2])
             
             #leg2 gait mode 8
             if gait == "8":
               self.servo.setServoAngle(12,90)
               self.servo.setServoAngle(11,170)
               self.servo.setServoAngle(10,-90)
+            elif gait == "4":
+              self.servo.setServoAngle(12,self.angle[1][0]-15)
+              self.servo.setServoAngle(11,self.angle[1][1]-15)
+              self.servo.setServoAngle(10,self.angle[1][2])
+            elif gait == "11":
+              self.servo.setServoAngle(12,90)
+              self.servo.setServoAngle(11,165)
+              self.servo.setServoAngle(10,-105)
+            elif gait == "15":
+              self.servo.setServoAngle(12,self.angle[1][0])
+              self.servo.setServoAngle(11,self.angle[1][1]-5)
+              self.servo.setServoAngle(10,self.angle[1][2])
             else:
               self.servo.setServoAngle(12,self.angle[1][0])
               self.servo.setServoAngle(11,self.angle[1][1])
               self.servo.setServoAngle(10,self.angle[1][2])
-            
+
             #leg6 gait mode 3
-            if gait=="6":
-                self.servo.setServoAngle(9,90)
-                self.servo.setServoAngle(8,170)
-                self.servo.setServoAngle(31,-90)
+            if gait == "3":
+              self.servo.setServoAngle(16,90)
+              self.servo.setServoAngle(17,15)
+              self.servo.setServoAngle(18,15)
+            elif gait == "4":
+              self.servo.setServoAngle(16,self.angle[5][0])
+              self.servo.setServoAngle(17,self.angle[5][1]+15)
+              self.servo.setServoAngle(18,self.angle[5][2]+45)
+            elif gait == "10":
+              self.servo.setServoAngle(16,90)
+              self.servo.setServoAngle(17,15)
+              self.servo.setServoAngle(18,15)
+            elif gait == "14":
+              self.servo.setServoAngle(16,90)
+              self.servo.setServoAngle(17,15)
+              self.servo.setServoAngle(18,15)
             else:
-                self.servo.setServoAngle(9,self.angle[2][0])
-                self.servo.setServoAngle(8,self.angle[2][1])
-                self.servo.setServoAngle(31,self.angle[2][2])
-            
+              self.servo.setServoAngle(16,self.angle[5][0])
+              self.servo.setServoAngle(17,self.angle[5][1])
+              self.servo.setServoAngle(18,self.angle[5][2])
+
             #leg3 gait mode 6
-            if gait=="3":
-                self.servo.setServoAngle(16,90)
-                self.servo.setServoAngle(17,0)
-                self.servo.setServoAngle(18,0)
+            if gait=="6":
+              self.servo.setServoAngle(9,90)
+              self.servo.setServoAngle(8,170)
+              self.servo.setServoAngle(31,-90)
+            elif gait == "4":
+              self.servo.setServoAngle(9,self.angle[2][0])
+              self.servo.setServoAngle(8,self.angle[2][1]-15)
+              self.servo.setServoAngle(31,self.angle[2][2])
+            elif gait=="12":
+              self.servo.setServoAngle(9,90)
+              self.servo.setServoAngle(8,0)
+              self.servo.setServoAngle(31,0)
+            elif gait=="14":
+              self.servo.setServoAngle(9,90)
+              self.servo.setServoAngle(8,0)
+              self.servo.setServoAngle(31,0)
             else:
-                self.servo.setServoAngle(16,self.angle[5][0])
-                self.servo.setServoAngle(17,self.angle[5][1])
-                self.servo.setServoAngle(18,self.angle[5][2])
-            
+              self.servo.setServoAngle(9,self.angle[2][0])
+              self.servo.setServoAngle(8,self.angle[2][1])
+              self.servo.setServoAngle(31,self.angle[2][2])
+
             #leg5 gait mode 9
             if gait == "9":
               self.servo.setServoAngle(19,90)
-              self.servo.setServoAngle(20,0)
-              self.servo.setServoAngle(21,0)
+              self.servo.setServoAngle(20,15)
+              self.servo.setServoAngle(21,15)
+            elif gait == "4":
+              self.servo.setServoAngle(19,self.angle[4][0]+15)
+              self.servo.setServoAngle(20,self.angle[4][1]+15)
+              self.servo.setServoAngle(21,self.angle[4][2])
+            elif gait == "15":
+              self.servo.setServoAngle(19,self.angle[4][0])
+              self.servo.setServoAngle(20,self.angle[4][1]+5)
+              self.servo.setServoAngle(21,self.angle[4][2])
+            elif gait == "11":
+              self.servo.setServoAngle(19,90)
+              self.servo.setServoAngle(20,15)
+              self.servo.setServoAngle(21,15)
             else:
               self.servo.setServoAngle(19,self.angle[4][0])
               self.servo.setServoAngle(20,self.angle[4][1])
               self.servo.setServoAngle(21,self.angle[4][2])
-            
+
             #leg4
-            if gait=="7":
-                self.servo.setServoAngle(22,90)
-                self.servo.setServoAngle(23,30)
-                self.servo.setServoAngle(27,30)
+            if gait == "7":
+              self.servo.setServoAngle(22,90)
+              self.servo.setServoAngle(23,30)
+              self.servo.setServoAngle(27,30)
+            elif gait == "4":
+              self.servo.setServoAngle(22,self.angle[3][0])
+              self.servo.setServoAngle(23,self.angle[3][1]+15)
+              self.servo.setServoAngle(27,self.angle[3][2])
             else:
-                self.servo.setServoAngle(22,self.angle[3][0])
-                self.servo.setServoAngle(23,self.angle[3][1])
-                self.servo.setServoAngle(27,self.angle[3][2])
+              self.servo.setServoAngle(22,self.angle[3][0])
+              self.servo.setServoAngle(23,self.angle[3][1])
+              self.servo.setServoAngle(27,self.angle[3][2])
         else:
             print("This coordinate point is out of the active range")    
         
@@ -451,6 +515,33 @@ class Control:
         self.leg_point[5][0]=point[5][0]*math.cos(126/180*math.pi)+point[5][1]*math.sin(126/180*math.pi)-94
         self.leg_point[5][1]=-point[5][0]*math.sin(126/180*math.pi)+point[5][1]*math.cos(126/180*math.pi)
         self.leg_point[5][2]=point[5][2]-14
+        
+        #climb mode
+    def coordinateTransformation4thGaitMode(self,point):
+        #leg1
+        self.leg_point[0][0]=point[0][0]*math.cos(54/180*math.pi)+point[0][1]*math.sin(54/180*math.pi)-94
+        self.leg_point[0][1]=-point[0][0]*math.sin(54/180*math.pi)+point[0][1]*math.cos(54/180*math.pi)
+        self.leg_point[0][2]=point[0][2]-14
+        #leg2
+        self.leg_point[1][0]=point[1][0]*math.cos(0/180*math.pi)+point[1][1]*math.sin(0/180*math.pi)-85
+        self.leg_point[1][1]=-point[1][0]*math.sin(0/180*math.pi)+point[1][1]*math.cos(0/180*math.pi)
+        self.leg_point[1][2]=point[1][2]-14
+        #leg3
+        self.leg_point[2][0]=point[2][0]*math.cos(-54/180*math.pi)+point[2][1]*math.sin(-54/180*math.pi)-94
+        self.leg_point[2][1]=-point[2][0]*math.sin(-54/180*math.pi)+point[2][1]*math.cos(-54/180*math.pi)
+        self.leg_point[2][2]=point[2][2]-14
+        #leg4
+        self.leg_point[3][0]=point[3][0]*math.cos(-126/180*math.pi)+point[3][1]*math.sin(-126/180*math.pi)-94
+        self.leg_point[3][1]=-point[3][0]*math.sin(-126/180*math.pi)+point[3][1]*math.cos(-126/180*math.pi)
+        self.leg_point[3][2]=point[3][2]-14
+        #leg5
+        self.leg_point[4][0]=point[4][0]*math.cos(180/180*math.pi)+point[4][1]*math.sin(180/180*math.pi)-85
+        self.leg_point[4][1]=-point[4][0]*math.sin(180/180*math.pi)+point[4][1]*math.cos(180/180*math.pi)
+        self.leg_point[4][2]=point[4][2]-14
+        #leg6
+        self.leg_point[5][0]=point[5][0]*math.cos(126/180*math.pi)+point[5][1]*math.sin(126/180*math.pi)-94
+        self.leg_point[5][1]=-point[5][0]*math.sin(126/180*math.pi)+point[5][1]*math.cos(126/180*math.pi)
+        self.leg_point[5][2]=point[5][2]-14
     
     def coordinateTransformation5thGaitMode(self,point):
         #leg1 broken
@@ -579,7 +670,85 @@ class Control:
         self.leg_point[5][0]=point[5][0]*math.cos(115/180*math.pi)+point[5][1]*math.sin(115/180*math.pi)-94
         self.leg_point[5][1]=-point[5][0]*math.sin(115/180*math.pi)+point[5][1]*math.cos(115/180*math.pi)
         self.leg_point[5][2]=point[5][2]-14
-          
+    def coordinateTransformation10thGaitMode(self,point):
+        #leg1 down
+        self.leg_point[0][0]=point[0][0]*math.cos(54/180*math.pi)+point[0][1]*math.sin(54/180*math.pi)-94
+        self.leg_point[0][1]=-point[0][0]*math.sin(54/180*math.pi)+point[0][1]*math.cos(54/180*math.pi)
+        self.leg_point[0][2]=point[0][2]-14
+        #leg2 wider steps positive
+        self.leg_point[1][0]=point[1][0]*math.cos(-20/180*math.pi)+point[1][1]*math.sin(-20/180*math.pi)-85
+        self.leg_point[1][1]=-point[1][0]*math.sin(-20/180*math.pi)+point[1][1]*math.cos(-20/180*math.pi)
+        self.leg_point[1][2]=point[1][2]-14
+        #leg3
+        self.leg_point[2][0]=point[2][0]*math.cos(-64/180*math.pi)+point[2][1]*math.sin(-64/180*math.pi)-94
+        self.leg_point[2][1]=-point[2][0]*math.sin(-64/180*math.pi)+point[2][1]*math.cos(-64/180*math.pi)
+        self.leg_point[2][2]=point[2][2]-14
+        #leg4
+        self.leg_point[3][0]=point[3][0]*math.cos(-116/180*math.pi)+point[3][1]*math.sin(-116/180*math.pi)-94
+        self.leg_point[3][1]=-point[3][0]*math.sin(-116/180*math.pi)+point[3][1]*math.cos(-116/180*math.pi)
+        self.leg_point[3][2]=point[3][2]-14
+        #leg5 wider steps negative
+        self.leg_point[4][0]=point[4][0]*math.cos(200/180*math.pi)+point[4][1]*math.sin(200/180*math.pi)-85
+        self.leg_point[4][1]=-point[4][0]*math.sin(200/180*math.pi)+point[4][1]*math.cos(200/180*math.pi)
+        self.leg_point[4][2]=point[4][2]-14
+        #leg6 down 
+        self.leg_point[5][0]=point[5][0]*math.cos(126/180*math.pi)+point[5][1]*math.sin(126/180*math.pi)-85
+        self.leg_point[5][1]=-point[5][0]*math.sin(126/180*math.pi)+point[5][1]*math.cos(126/180*math.pi)
+        self.leg_point[5][2]=point[5][2]-14
+    
+    def coordinateTransformation11thGaitMode(self,point):
+        #leg1
+        self.leg_point[0][0]=point[0][0]*math.cos(65/180*math.pi)+point[0][1]*math.sin(65/180*math.pi)-94
+        self.leg_point[0][1]=-point[0][0]*math.sin(65/180*math.pi)+point[0][1]*math.cos(65/180*math.pi)
+        self.leg_point[0][2]=point[0][2]-14
+        #leg2 down
+        self.leg_point[1][0]=point[1][0]*math.cos(0/180*math.pi)+point[1][1]*math.sin(0/180*math.pi)-85
+        self.leg_point[1][1]=-point[1][0]*math.sin(0/180*math.pi)+point[1][1]*math.cos(0/180*math.pi)
+        self.leg_point[1][2]=point[1][2]-14
+        #leg3
+        self.leg_point[2][0]=point[2][0]*math.cos(-64/180*math.pi)+point[2][1]*math.sin(-64/180*math.pi)-94
+        self.leg_point[2][1]=-point[2][0]*math.sin(-64/180*math.pi)+point[2][1]*math.cos(-64/180*math.pi)
+        self.leg_point[2][2]=point[2][2]-14
+        #leg4
+        self.leg_point[3][0]=point[3][0]*math.cos(-115/180*math.pi)+point[3][1]*math.sin(-115/180*math.pi)-94
+        self.leg_point[3][1]=-point[3][0]*math.sin(-115/180*math.pi)+point[3][1]*math.cos(-115/180*math.pi)
+        self.leg_point[3][2]=point[3][2]-14
+        #leg5 dowm
+        self.leg_point[4][0]=point[4][0]*math.cos(180/180*math.pi)+point[4][1]*math.sin(180/180*math.pi)-85
+        self.leg_point[4][1]=-point[4][0]*math.sin(180/180*math.pi)+point[4][1]*math.cos(180/180*math.pi)
+        self.leg_point[4][2]=point[4][2]-14
+        #leg6
+        self.leg_point[5][0]=point[5][0]*math.cos(115/180*math.pi)+point[5][1]*math.sin(115/180*math.pi)-85
+        self.leg_point[5][1]=-point[5][0]*math.sin(115/180*math.pi)+point[5][1]*math.cos(115/180*math.pi)
+        self.leg_point[5][2]=point[5][2]-14
+
+    #Dont know if 12 will work though
+    def coordinateTransformation12thGaitMode(self,point):
+        #leg1
+        self.leg_point[0][0]=point[0][0]*math.cos(50/180*math.pi)+point[0][1]*math.sin(50/180*math.pi)-94
+        self.leg_point[0][1]=-point[0][0]*math.sin(50/180*math.pi)+point[0][1]*math.cos(50/180*math.pi)
+        self.leg_point[0][2]=point[0][2]-14
+        #leg2
+        self.leg_point[1][0]=point[1][0]*math.cos(15/180*math.pi)+point[1][1]*math.sin(15/180*math.pi)-85
+        self.leg_point[1][1]=-point[1][0]*math.sin(15/180*math.pi)+point[1][1]*math.cos(15/180*math.pi)
+        self.leg_point[1][2]=point[1][2]-14
+        #leg3 down
+        self.leg_point[2][0]=point[2][0]*math.cos(-64/180*math.pi)+point[2][1]*math.sin(-64/180*math.pi)-94
+        self.leg_point[2][1]=-point[2][0]*math.sin(-64/180*math.pi)+point[2][1]*math.cos(-64/180*math.pi)
+        self.leg_point[2][2]=point[2][2]-14
+        #leg4 down
+        self.leg_point[3][0]=point[3][0]*math.cos(-115/180*math.pi)+point[3][1]*math.sin(-115/180*math.pi)-94
+        self.leg_point[3][1]=-point[3][0]*math.sin(-115/180*math.pi)+point[3][1]*math.cos(-115/180*math.pi)
+        self.leg_point[3][2]=point[3][2]-14
+        #leg5
+        self.leg_point[4][0]=point[4][0]*math.cos(165/180*math.pi)+point[4][1]*math.sin(165/180*math.pi)-85
+        self.leg_point[4][1]=-point[4][0]*math.sin(165/180*math.pi)+point[4][1]*math.cos(165/180*math.pi)
+        self.leg_point[4][2]=point[4][2]-14
+        #leg6
+        self.leg_point[5][0]=point[5][0]*math.cos(130/180*math.pi)+point[5][1]*math.sin(130/180*math.pi)-85
+        self.leg_point[5][1]=-point[5][0]*math.sin(130/180*math.pi)+point[5][1]*math.cos(130/180*math.pi)
+        self.leg_point[5][2]=point[5][2]-14
+
         
     def restriction(self,var,v_min,v_max):
         if var < v_min:
@@ -784,6 +953,7 @@ class Control:
                     time.sleep(delay) 
                     aa+=1
                 #one by one
+        #climb
         elif gait=="4":
             aa=0
             number=[5,0,2,1,3,4]
@@ -796,6 +966,8 @@ class Control:
                             if j <int(F/18):
                                 point[k][2]+=18*z
                             elif j <int(F/9):
+                                #if k==5 or k==0:
+                                #    print(k,"1",point[k][1], " after ", 30*xy[k][1])
                                 #print(k,"0", point[k][0], " after ", 30*xy[k][0])
                                 point[k][0]+=30*xy[k][0]
                                 #print(k,"1",point[k][1], " after ", 30*xy[k][1])
@@ -804,13 +976,47 @@ class Control:
                                 point[k][2]-=18*z
                                 
                                 #lower
-                                #if k==5 or k==0:
-                                    #point[k][2]-=2*18*z
+                                #if k==1:
+                                 #   point[k][2]+=18*z
+                                #elif k==4:
+                                 #   point[k][2]+=18*z
                                 
                                 #higher
-                                if k==5 or k==0:
-                                    point[k][2]+=3*18*z
+                               # if k==5 or k==0:
+                                   # point[k][2]+=3*18*z
 
+                        else:
+                            point[k][0]-=2*xy[k][0]
+                            point[k][1]-=2*xy[k][1]
+                    self.coordinateTransformation4thGaitMode(point)
+                    self.setLegAngle(gait)
+                    time.sleep(delay) 
+                    aa+=1
+        
+        elif gait=="15":
+            aa=0
+            number=[5,2,1,0,3,4]
+            for i in range(6):
+                #F = 64
+                
+                for j in range(int(F/6)):
+                    for k in range(6):
+                        if number[i] == k:                            
+                            if j <int(F/18):
+                                point[k][2]+=18*z
+                            elif j <int(F/9):
+                                
+                                
+                                if k==4 or k==1:
+                                  point[k][0]+=45*xy[k][0]
+                                  point[k][1]+=45*xy[k][1]
+                                else:
+                                  point[k][0]+=30*xy[k][0]
+                                  point[k][1]+=30*xy[k][1]
+                                  
+                                  
+                            elif j <int(F/6):
+                                point[k][2]-=18*z
                         else:
                             point[k][0]-=2*xy[k][0]
                             point[k][1]-=2*xy[k][1]
@@ -949,7 +1155,83 @@ class Control:
                     self.setLegAngle(gait)
                     time.sleep(delay) 
                     aa+=1
-                                            
+        #Does not work (DO NOT USE)                                
+        elif gait=="10":
+            aa=0
+            number=[5,2,1,0,3,4]
+            for i in range(6):
+                #F = 64
+                #int(F/6) = 10
+                #for j in range(10):
+                for j in range(int(F/6)):
+                    for k in range(6):
+                        if number[i] == k:                            
+                            if j <int(F/18):
+                                point[k][2]+=18*z
+                            elif j <int(F/9):
+                                point[k][0]+=30*xy[k][0]
+                                point[k][1]+=30*xy[k][1]
+                            elif j <int(F/6):
+                                point[k][2]-=18*z
+                        else:
+                            point[k][0]-=2*xy[k][0]
+                            point[k][1]-=2*xy[k][1]
+                    self.coordinateTransformation10thGaitMode(point)
+                    self.setLegAngle(gait)
+                    time.sleep(delay) 
+                    aa+=1
+        
+        #Does not work (DO NOT USE)
+        elif gait=="11":
+           aa=0
+           number=[5,2,1,0,3,4]
+           for i in range(6):
+                #F = 64
+                #int(F/6) = 10
+                #for j in range(10):
+                for j in range(int(F/6)):
+                    for k in range(6):
+                        if number[i] == k:                            
+                            if j <int(F/18):
+                                point[k][2]+=18*z
+                            elif j <int(F/9):
+                                point[k][0]+=30*xy[k][0]
+                                point[k][1]+=30*xy[k][1]
+                            elif j <int(F/6):
+                                point[k][2]-=18*z
+                        else:
+                            point[k][0]-=2*xy[k][0]
+                            point[k][1]-=2*xy[k][1]
+                    self.coordinateTransformation11thGaitMode(point)
+                    self.setLegAngle(gait)
+                    time.sleep(delay) 
+                    aa+=1
+        
+        #Does not work (DO NOT USE)
+        elif gait=="12":
+            aa=0
+            number=[5,2,1,0,3,4]
+            for i in range(6):
+                #F = 64
+                #int(F/6) = 10
+                #for j in range(10):
+                for j in range(int(F/6)):
+                    for k in range(6):
+                        if number[i] == k:                            
+                            if j <int(F/18):
+                                point[k][2]+=18*z
+                            elif j <int(F/9):
+                                point[k][0]+=30*xy[k][0]
+                                point[k][1]+=30*xy[k][1]
+                            elif j <int(F/6):
+                                point[k][2]-=18*z
+                        else:
+                            point[k][0]-=2*xy[k][0]
+                            point[k][1]-=2*xy[k][1]
+                    self.coordinateTransformation12thGaitMode(point)
+                    self.setLegAngle(gait)
+                    time.sleep(delay) 
+                    aa+=1
         
                              
 if __name__=='__main__':
